@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+    api:
+        container_name: api
+        entrypoint: dockerize -wait tcp://db:27017 -timeout 30s docker-entrypoint.sh
+        image: api:1.0.0
+        build:
+            context: api
+        command: npm run start:dev
+        ports:
+            - 3000:3000
+        networks:
+            - network-compass-uol
+        volumes:
+            - ./api:/usr/src/app
+        tty: true
+        depends_on: 
+            - db
+    
+    db:
+        container_name: db
+        image: db
+        build:
+            context: db
+        ports:
+            - 27016:27017
+        volumes: 
+            - ./db:/data/db
+        restart: unless-stopped
+        networks:
+            - network-compass-uol
+networks:
+    network-compass-uol:
+        driver: bridge
