@@ -25,7 +25,7 @@ export class ClientesService {
         return clienteCriado
     }
 
-    async atualizarCliente(_id: string, updateClienteDto: UpdateClienteDto): Promise<Cliente> {
+    async atualizarCliente(_id: string, updateClienteDto: any): Promise<Cliente> {
         const clienteEncontrado = await this.clienteModel.findOne({_id}).exec()
         if(!clienteEncontrado){
             throw new BadRequestException(`Cliente com o _id ${_id} não encontrado`)
@@ -34,8 +34,24 @@ export class ClientesService {
         return await this.clienteModel.findOneAndUpdate({_id: _id},{$set: updateClienteDto}).exec()
     }
 
-    async consultarTodosCliente(): Promise<Cliente[]> {
-        return await this.clienteModel.find().exec()
+    async consultarTodosCliente(nome, _id): Promise<Cliente[]> {
+        let q = {
+            nome: null,
+            _id: null
+        }
+
+        if(nome){
+            q.nome = nome
+        }else{
+            delete q.nome
+        }
+
+        if(_id){
+            q._id = _id
+        }else{
+            delete q._id
+        }
+        return await this.clienteModel.find(q).exec()
     }
 
     async consultarClienteKey(_id: string): Promise<Cliente> {

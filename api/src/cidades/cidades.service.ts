@@ -34,8 +34,24 @@ export class CidadesService {
         return await this.cidadeModel.findOneAndUpdate({_id: _id},{$set: updateCidadeDto}).exec()
     }
 
-    async consultarTodosCidade(): Promise<Cidade[]> {
-        return await this.cidadeModel.find().exec()
+    async consultarTodosCidade(nome, estado): Promise<Cidade[]> {
+        let q = {
+            nome: null,
+            estado: null
+        }
+
+        if(nome){
+            q.nome = nome
+        }else{
+            delete q.nome
+        }
+
+        if(estado){
+            q.estado = estado
+        }else{
+            delete q.estado
+        }
+        return await this.cidadeModel.find(q).exec()
     }
 
     async consultarCidadeKey(_id: string): Promise<Cidade> {

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Inject, Logger, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Inject, Logger, Param, Patch, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { ClientesService } from './clientes.service';
@@ -23,8 +23,11 @@ export class ClientesController {
 
     @UseGuards(JwtAuthGuard)
     @Get()
-    async consultarCliente(): Promise<Cliente[]> {
-        return await this.clientesService.consultarTodosCliente();
+    async consultarCliente(
+        @Query('nome') nome,
+        @Query('_id') _id,
+    ): Promise<Cliente[]> {
+        return await this.clientesService.consultarTodosCliente(nome, _id);
     }
 
     @UseGuards(JwtAuthGuard)
@@ -34,12 +37,11 @@ export class ClientesController {
     }
 
     @UseGuards(JwtAuthGuard)
-    @Put('/:_id')
+    @Patch('/:_id')
     async atualizarCliente(
-        @Body() updateClienteDto: UpdateClienteDto,
+        @Body() updateClienteDto: any,
         @Param('_id') _id: string
     ): Promise<void> { 
-        this.logger.log(`updateClienteDto: ${JSON.stringify(updateClienteDto)}`);
         await this.clientesService.atualizarCliente(_id,updateClienteDto)
     }
 

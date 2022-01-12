@@ -29,8 +29,9 @@ docker-compose up -d --build
 /v1/auth/login
 
 credenciais para teste:
-login: user@exemplo.com.br
-senha: 12345
+email: user@exemplo.com.br
+password: 12345
+recupera token e envia no header Bearer nas requisições
 ```
 
 ### 🔧 Swagger

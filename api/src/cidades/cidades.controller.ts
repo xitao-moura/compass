@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Inject, Logger, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Inject, Logger, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { CidadesService } from './cidades.service';
@@ -23,8 +23,11 @@ export class CidadesController {
 
     @UseGuards(JwtAuthGuard)
     @Get()
-    async consultarCidade(): Promise<Cidade[]> {
-        return await this.cidadesService.consultarTodosCidade();
+    async consultarCidade(
+        @Query('nome') nome,
+        @Query('estado') estado,
+    ): Promise<Cidade[]> {
+        return await this.cidadesService.consultarTodosCidade(nome, estado);
     }
 
     @UseGuards(JwtAuthGuard)
